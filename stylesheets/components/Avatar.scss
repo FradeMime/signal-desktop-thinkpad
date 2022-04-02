@@ -1,0 +1,141 @@
+// Copyright 2021 Signal Messenger, LLC
+// SPDX-License-Identifier: AGPL-3.0-only
+
+.module-Avatar {
+  display: inline-flex;
+  line-height: 0;
+  position: relative;
+  user-select: none;
+  vertical-align: middle;
+
+  &__contents {
+    @include avatar-colors;
+    position: relative;
+    overflow: hidden;
+    border-radius: 100%;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    outline: none;
+
+    @at-root button#{&} {
+      @include keyboard-mode {
+        &:focus {
+          box-shadow: 0 0 0 3px $color-ultramarine;
+        }
+      }
+    }
+  }
+
+  &__image,
+  &__label,
+  &__icon,
+  &__spinner-container,
+  &__click-to-view {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__image {
+    background-position: center center;
+    background-size: cover;
+    transition: filter 100ms ease-out;
+  }
+
+  &__click-to-view {
+    @include font-body-2;
+    align-items: center;
+    background: $color-black-alpha-20;
+    color: $color-white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    top: 0;
+
+    &::before {
+      @include color-svg(
+        '../images/icons/v2/click-outline-24.svg',
+        $color-white
+      );
+      content: '';
+      display: block;
+      height: 24px;
+      margin-bottom: 8px;
+      width: 24px;
+    }
+
+    &:hover {
+      background: $color-black-alpha-40;
+    }
+  }
+
+  &__label {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    text-transform: uppercase;
+    transition: font-size 100ms ease-out;
+  }
+
+  &__icon {
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: 62%;
+    background-color: var(--fg);
+
+    &--direct {
+      -webkit-mask-image: url('../images/icons/v2/profile-outline-20.svg');
+      -webkit-mask-size: 60%;
+    }
+
+    &--group {
+      -webkit-mask-image: url('../images/icons/v2/group-outline-24.svg');
+    }
+
+    &--note-to-self {
+      -webkit-mask-image: url('../images/icons/v2/note-24.svg');
+    }
+
+    &--search-result {
+      -webkit-mask-image: url('../images/icons/v2/search-24.svg');
+      -webkit-mask-size: 50%;
+    }
+  }
+
+  &__spinner-container {
+    padding: 4px;
+  }
+
+  &__badge {
+    position: absolute;
+    z-index: $z-index-base;
+
+    // Positioning should be overridden by JavaScript. These are set defensively.
+    bottom: 0;
+    right: 0;
+
+    &--static {
+      pointer-events: none;
+    }
+
+    &--button {
+      background-color: transparent;
+      background-position: center center;
+      background-size: contain;
+      border: 0;
+      outline: none;
+
+      @include keyboard-mode {
+        &:focus {
+          outline: 2px solid $color-ultramarine;
+          border-radius: 6px;
+        }
+      }
+    }
+  }
+}

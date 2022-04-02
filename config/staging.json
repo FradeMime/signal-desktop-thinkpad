@@ -1,0 +1,5 @@
+{
+  "storageProfile": "staging",
+  "openDevTools": true,
+  "SIGNAL_ENABLE_HTTP": "hello"
+}

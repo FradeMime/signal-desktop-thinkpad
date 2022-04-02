@@ -1,0 +1,5 @@
+{
+  "storageProfile": "development",
+  "openDevTools": true,
+  "SIGNAL_ENABLE_HTTP": 1
+}

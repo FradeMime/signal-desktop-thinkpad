@@ -1,0 +1,152 @@
+<!-- Copyright 2014-2021 Signal Messenger, LLC -->
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"
+      name="viewport"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none';
+            child-src 'self';
+            connect-src 'self' https: wss: http:;
+            font-src 'self';
+            form-action 'self';
+            frame-src 'none';
+            img-src 'self' blob: data:;
+            media-src 'self' blob:;
+            object-src 'none';
+            script-src 'self' 'sha256-eLeGwSfPmXJ+EUiLfIeXABvLiUqDbiKgNLpHITaabgQ=';
+            style-src 'self' 'unsafe-inline';"
+    />
+    <title>Signal</title>
+    <link
+      href="node_modules/sanitize.css/sanitize.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="node_modules/react-quill/dist/quill.core.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="stylesheets/manifest.css" rel="stylesheet" type="text/css" />
+
+    <!--
+    When making changes to these templates, be sure to update test/index.html as well
+  -->
+
+    <script type="text/x-tmpl-mustache" id="app-loading-screen">
+      <div class='module-title-bar-drag-area'></div>
+
+      <div class='content'>
+        <div class="module-splash-screen__logo module-img--150"></div>
+        <div class='container'>
+          <span class='dot'></span>
+          <span class='dot'></span>
+          <span class='dot'></span>
+        </div>
+        <div class='message'>{{ message }}</div>
+      </div>
+    </script>
+
+    <script type="text/x-tmpl-mustache" id="two-column">
+      <div class='module-title-bar-drag-area'></div>
+
+      <div class='left-pane-placeholder'></div>
+
+      <div class='conversation-stack'>
+        <div class='no-conversation-open'>
+          <div class="module-splash-screen__logo module-img--128 module-logo-blue"></div>
+          <h3>{{ welcomeToSignal }}</h3>
+          <p class="whats-new-placeholder"></p>
+          <p>{{ selectAContact }}</p>
+        </div>
+        <div id="toast"></div>
+      </div>
+
+      <div class='lightbox-container'></div>
+    </script>
+
+    <script type="text/x-tmpl-mustache" id="conversation">
+      <div class="ConversationView__template"></div>
+    </script>
+
+    <script type="text/x-tmpl-mustache" id="recorder">
+      <button class='close' tabIndex='2'><span class='icon'></span></button>
+      <span class='time'>0:00</span>
+      <button class='finish' tabIndex='1'><span class='icon'></span></button>
+    </script>
+
+    <script type="text/x-tmpl-mustache" id="group-member-list">
+      <div class='container' tabindex='0'>
+        {{ #summary }} <div class='summary'>{{ summary }}</div>{{ /summary }}
+      </div>
+    </script>
+
+    <script type="text/javascript" src="js/components.js"></script>
+    <script type="text/javascript" src="ts/set_os_class.js"></script>
+    <script
+      type="text/javascript"
+      src="ts/manage_full_screen_class.js"
+    ></script>
+    <script type="text/javascript" src="ts/backboneJquery.js"></script>
+    <script type="text/javascript" src="js/reliable_trigger.js"></script>
+    <script type="text/javascript" src="js/database.js"></script>
+
+    <script
+      type="text/javascript"
+      src="libtextsecure/protocol_wrapper.js"
+    ></script>
+
+    <script type="text/javascript" src="js/libphonenumber-util.js"></script>
+    <script type="text/javascript" src="js/expiring_messages.js"></script>
+    <script
+      type="text/javascript"
+      src="js/expiring_tap_to_view_messages.js"
+    ></script>
+
+    <script
+      type="text/javascript"
+      src="js/views/react_wrapper_view.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="ts/shims/showConfirmationDialog.js"
+    ></script>
+
+    <script type="text/javascript" src="js/wall_clock_listener.js"></script>
+  </head>
+  <body class="overflow-hidden">
+    <div id="app-container">
+      <div class="app-loading-screen">
+        <div class="module-title-bar-drag-area"></div>
+
+        <div class="content">
+          <div class="module-splash-screen__logo module-img--150"></div>
+          <div class="container">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <div class="message"></div>
+        </div>
+      </div>
+    </div>
+
+    <!--
+    Note: this inline script cannot be changed without also changing the hash in
+    the CSP at the top of this file
+    -->
+    <script type="text/javascript">
+      window.startApp();
+    </script>
+  </body>
+</html>

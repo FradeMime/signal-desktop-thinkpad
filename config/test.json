@@ -1,0 +1,5 @@
+{
+  "storageProfile": "test",
+  "openDevTools": false,
+  "SIGNAL_ENABLE_HTTP": "hello"
+}
