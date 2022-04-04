@@ -188,6 +188,7 @@ export abstract class JobQueue<T> {
   }
 
   private async enqueueStoredJob(storedJob: Readonly<StoredJob>) {
+    log.info('enqueueStoredJob 函数');
     assert(
       storedJob.queueType === this.queueType,
       'Received a mis-matched queue type'

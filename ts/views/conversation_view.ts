@@ -2788,6 +2788,7 @@ export class ConversationView extends window.Backbone.View<ConversationModel> {
     return false;
   }
 
+  // 发送聊天内容
   async sendMessage(
     message = '',
     mentions: BodyRangesType = [],

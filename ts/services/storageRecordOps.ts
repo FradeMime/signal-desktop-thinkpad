@@ -862,7 +862,7 @@ export async function mergeAccountRecord(
     subscriberCurrencyCode,
     displayBadgesOnProfile,
   } = accountRecord;
-
+  log.info('mergeAccountRecord');
   window.storage.put('read-receipt-setting', Boolean(readReceipts));
 
   if (typeof sealedSenderIndicators === 'boolean') {
