@@ -1332,6 +1332,7 @@ export class ConversationModel extends window.Backbone
     message: MessageModel,
     { isJustSent }: { isJustSent: boolean } = { isJustSent: false }
   ): Promise<void> {
+    log.info('addSingleMessage--');
     if (!this.newMessageQueue) {
       this.newMessageQueue = new window.PQueue({
         concurrency: 1,
@@ -2467,6 +2468,7 @@ export class ConversationModel extends window.Backbone
   }
 
   async updateVerified(): Promise<void> {
+    log.info('updateVerfied--');
     if (isDirectConversation(this.attributes)) {
       await this.initialPromise;
       const verified = await this.safeGetVerified();
@@ -2478,7 +2480,7 @@ export class ConversationModel extends window.Backbone
 
       return;
     }
-
+    log.info('fetchContacts--');
     this.fetchContacts();
 
     await Promise.all(
@@ -3876,13 +3878,17 @@ export class ConversationModel extends window.Backbone
 
     this.clearTypingTimers();
 
-    const mandatoryProfileSharingEnabled = window.Signal.RemoteConfig.isEnabled(
-      'desktop.mandatoryProfileSharing'
-    );
+    // const mandatoryProfileSharingEnabled = window.Signal.RemoteConfig.isEnabled(
+    //   'desktop.mandatoryProfileSharing'
+    // );
+    const mandatoryProfileSharingEnabled = true;
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const destination = this.getSendTarget()!;
     const recipients = this.getRecipients();
+    log.info(
+      `enqueueMessageForSend destination:${destination};recipients:${recipients}`
+    );
 
     await this.maybeApplyUniversalTimer(false);
 
@@ -3958,7 +3964,7 @@ export class ConversationModel extends window.Backbone
       typeof message.attributes.timestamp === 'number',
       'Expected a timestamp'
     );
-
+    log.info(`enqueueMessageForSend:${JSON.stringify(message)}`);
     await normalMessageSendJobQueue.add(
       { messageId: message.id, conversationId: this.id },
       async jobToInsert => {
