@@ -13,6 +13,7 @@ const ELECTRON = join(
   '.bin',
   process.platform === 'win32' ? 'electron.cmd' : 'electron'
 );
+console.log(`ELECTRON:${ELECTRON}`);
 
 const stdout = execFileSync(ELECTRON, [ROOT_DIR], {
   cwd: ROOT_DIR,
