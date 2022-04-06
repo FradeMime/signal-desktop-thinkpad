@@ -22,6 +22,9 @@ export async function getProfile(
   providedUuid?: string,
   providedE164?: string
 ): Promise<void> {
+  log.info(
+    `getProfile.ts getprofile:providedUuid:#+${providedUuid};providedE164:${providedE164}`
+  );
   if (!window.textsecure.messaging) {
     throw new Error(
       'Conversation.getProfile: window.textsecure.messaging not available'

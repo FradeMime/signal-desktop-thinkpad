@@ -7,7 +7,6 @@ import type { UUIDStringType } from './UUID';
 import { UUID } from './UUID';
 import * as log from '../logging/log';
 
-
 export type AddressStringType = `${UUIDStringType}.${number}`;
 
 const ADDRESS_REGEXP = /^([0-9a-f-]+).(\d+)$/i;

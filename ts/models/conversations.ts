@@ -1341,6 +1341,7 @@ export class ConversationModel extends window.Backbone
     }
 
     // We use a queue here to ensure messages are added to the UI in the order received
+    // 将new msg加入队列
     await this.newMessageQueue.add(async () => {
       await this.inProgressFetch;
     });
@@ -1388,6 +1389,7 @@ export class ConversationModel extends window.Backbone
     newestMessageId: string | undefined,
     setFocus: boolean | undefined
   ): Promise<void> {
+    log.info('loadNewestMessages加载最新msg');
     const { messagesReset, setMessagesLoading } =
       window.reduxActions.conversations;
     const conversationId = this.id;

@@ -315,6 +315,7 @@ class Message {
   }
 
   toProto(): Proto.DataMessage {
+    log.info('数据转Proto');
     if (this.dataMessage) {
       return this.dataMessage;
     }

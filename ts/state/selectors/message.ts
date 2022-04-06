@@ -1260,6 +1260,7 @@ export function getMessagePropStatus(
   >,
   ourConversationId: string
 ): LastMessageStatus | undefined {
+  log.info(`获取消息属性状态:${message}`);
   if (!isOutgoing(message)) {
     return undefined;
   }

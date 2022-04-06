@@ -100,6 +100,10 @@ export function prefixPublicKey(pubKey: Uint8Array): Uint8Array {
   ]);
 }
 
+// 秘钥协商？？
+// key_A = (bob.pubkey, alice.prikey)
+// key_B = (alice.pubkey, bob.prikey)
+// key_A == key_B
 export function calculateAgreement(
   pubKey: Uint8Array,
   privKey: Uint8Array

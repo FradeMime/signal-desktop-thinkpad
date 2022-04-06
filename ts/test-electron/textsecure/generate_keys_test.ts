@@ -17,6 +17,7 @@ const assertEqualBuffers = (a: Uint8Array, b: Uint8Array) => {
   assert.isTrue(constantTimeEqual(a, b));
 };
 
+// 秘钥生成
 describe('Key generation', function thisNeeded() {
   const count = 10;
   const ourUuid = new UUID('aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee');

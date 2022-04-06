@@ -47,6 +47,7 @@ describe('SignalProtocolStore', () => {
 
     proto.previousSessions = [];
 
+    // 双棘轮算法
     if (isOpen) {
       proto.currentSession = new SessionStructure();
 

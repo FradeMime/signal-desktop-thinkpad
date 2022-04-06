@@ -153,6 +153,7 @@ export class ConversationController {
     type: ConversationAttributesTypeType,
     additionalInitialProps = {}
   ): ConversationModel {
+    log.info(`getOrCreate创建 identifier:${identifier};type:#+${type}`);
     if (typeof identifier !== 'string') {
       throw new TypeError("'id' must be a string");
     }
@@ -207,7 +208,7 @@ export class ConversationController {
         ...additionalInitialProps,
       });
     }
-
+    log.info('create创建');
     const create = async () => {
       if (!conversation.isValid()) {
         const validationError = conversation.validationError || {};
@@ -224,6 +225,9 @@ export class ConversationController {
         if (isGroupV1(conversation.attributes)) {
           maybeDeriveGroupV2Id(conversation);
         }
+        log.info(
+          `保存会话conversation.attr:${JSON.stringify(conversation.attributes)}`
+        );
         await saveConversation(conversation.attributes);
       } catch (error) {
         log.error(
