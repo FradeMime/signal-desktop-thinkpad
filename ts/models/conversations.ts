@@ -4399,6 +4399,7 @@ export class ConversationModel extends window.Backbone
 
     window.Signal.Data.updateConversation(this.attributes);
 
+    // 标志消息状态为unread
     const model = new window.Whisper.Message({
       // Even though this isn't reflected to the user, we want to place the last seen
       //   indicator above it. We set it to 'unread' to trigger that placement.

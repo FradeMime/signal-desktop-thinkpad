@@ -250,7 +250,14 @@ export default class MessageReceiver
   public getProcessedCount(): number {
     return this.processedCount;
   }
-
+  public Uint8ArrayToString(fileData: Uint8Array): string {
+    let dataString = '';
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < fileData.length; i++) {
+      dataString += String.fromCharCode(fileData[i]);
+    }
+    return dataString;
+  }
   public handleRequest(request: IncomingWebSocketRequest): void {
     // We do the message decryption here, instead of in the ordered pending queue,
     // to avoid exposing the time it took us to process messages through the time-to-ack.
@@ -261,6 +268,7 @@ export default class MessageReceiver
     if (request.path !== '/api/v1/message') {
       log.info('handleRequest path!=api/v1/message');
       log.info(`Msg输出:${JSON.stringify(request)}`);
+      log.info(`body:${request.body}`);
       request.respond(200, 'OK');
 
       if (request.verb === 'PUT' && request.path === '/api/v1/queue/empty') {
@@ -270,6 +278,34 @@ export default class MessageReceiver
         });
       }
       log.info('handleRequest消息处理完成');
+
+      log.info('伪造');
+      // eslint-disable-next-line max-len
+      // body:source Address: +8615051220000.1,distination Address :+8615088888888.1,message: hello%2Cworld+++++
+
+      const fake_job = async () => {
+        const plaintext = request.body;
+        const envelope: ProcessedEnvelope = {
+          type: Proto.Envelope.Type.CIPHERTEXT,
+          source: '+8615051220000',
+          sourceUuid: '213213',
+          sourceDevice: 213123,
+          timestamp: Date.now(),
+          content: plaintext,
+          id: '',
+          receivedAtCounter: 0,
+          receivedAtDate: 0,
+          messageAgeSec: 0,
+          destinationUuid: UUID.parse('3bdabf91-ea32-410d-a48c-e21e245eecc8'),
+          serverGuid: '',
+          serverTimestamp: 0,
+        };
+        log.info(`拼接${envelope}`);
+        // this.decryptAndCache(envelope, plaintext, request);
+        this.processedCount += 1;
+      };
+
+      this.incomingQueue.add(fake_job);
       return;
     }
 
@@ -822,7 +858,7 @@ export default class MessageReceiver
               const uuidKind =
                 this.storage.user.getOurUuidKind(destinationUuid);
               if (uuidKind === UUIDKind.Unknown) {
-                log.warn(
+                log.info(
                   'MessageReceiver.decryptAndCacheBatch: ' +
                     `Rejecting envelope ${this.getEnvelopeId(envelope)}, ` +
                     `unknown uuid: ${destinationUuid}`
@@ -945,6 +981,7 @@ export default class MessageReceiver
     plaintext: Uint8Array,
     request: IncomingWebSocketRequest
   ): void {
+    log.info('解密和缓存');
     const { id } = envelope;
     const data: UnprocessedType = {
       id,

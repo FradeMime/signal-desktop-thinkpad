@@ -474,7 +474,8 @@ export function bytesToUuid(bytes: Uint8Array): undefined | UUIDStringType {
 }
 
 export function splitUuids(buffer: Uint8Array): Array<UUIDStringType | null> {
-  const uuids = [];
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  let uuids: any;
   for (let i = 0; i < buffer.byteLength; i += UUID_BYTE_SIZE) {
     const bytes = getBytes(buffer, i, UUID_BYTE_SIZE);
     const hex = Bytes.toHex(bytes);

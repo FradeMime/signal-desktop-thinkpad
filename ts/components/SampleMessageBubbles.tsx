@@ -33,6 +33,8 @@ const SampleMessage = ({
   status: 'delivered' | 'read' | 'sent';
   style?: CSSProperties;
 }): JSX.Element => (
+  // module-message module-message--outgoing 发送消息
+  // module-message module-message--incoming 接受消息
   <div className={`module-message module-message--${direction}`}>
     <div className="module-message__container-outer">
       <div

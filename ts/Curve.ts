@@ -18,6 +18,7 @@ export function isNonNegativeInteger(n: unknown): n is number {
   return typeof n === 'number' && n % 1 === 0 && n >= 0;
 }
 
+// 生成SPK密钥对  已签名的预设公钥对
 export function generateSignedPreKey(
   identityKeyPair: KeyPairType,
   keyId: number
@@ -48,6 +49,7 @@ export function generateSignedPreKey(
     signature,
   };
 }
+// 生成预设公钥对   PK 未签名
 export function generatePreKey(keyId: number): CompatPreKeyType {
   if (!isNonNegativeInteger(keyId)) {
     throw new TypeError(`generatePreKey: Invalid argument for keyId: ${keyId}`);
@@ -100,7 +102,7 @@ export function prefixPublicKey(pubKey: Uint8Array): Uint8Array {
   ]);
 }
 
-// 秘钥协商？？
+// 秘钥协商
 // key_A = (bob.pubkey, alice.prikey)
 // key_B = (alice.pubkey, bob.prikey)
 // key_A == key_B
@@ -118,6 +120,7 @@ export function calculateAgreement(
   return sharedSecret;
 }
 
+// 对数据和其签名进行验证
 export function verifySignature(
   pubKey: Uint8Array,
   message: Uint8Array,
@@ -133,6 +136,7 @@ export function verifySignature(
   return result;
 }
 
+// 对数据进行签名
 export function calculateSignature(
   privKey: Uint8Array,
   plaintext: Uint8Array

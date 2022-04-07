@@ -3256,7 +3256,7 @@ export async function startApp(): Promise<void> {
   //   inside a conversation-specific queue(). Any code here might run before an earlier
   //   message is processed in handleDataMessage().
   function onSentMessage(event: SentEvent) {
-    log.info('onSentMessage');
+    log.info('bg.ts内的onSentMessage');
     const { data, confirm } = event;
 
     const source = window.textsecure.storage.user.getNumber();
