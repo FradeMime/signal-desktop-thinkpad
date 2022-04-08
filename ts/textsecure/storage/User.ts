@@ -94,6 +94,7 @@ export class User {
 
   public getOurUuidKind(uuid: UUID): UUIDKind {
     const ourUuid = this.getUuid();
+    log.info(`获取自身UUid:${ourUuid?.toString()}`);
 
     if (ourUuid?.toString() === uuid.toString()) {
       return UUIDKind.ACI;

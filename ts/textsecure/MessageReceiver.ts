@@ -284,24 +284,29 @@ export default class MessageReceiver
       // body:source Address: +8615051220000.1,distination Address :+8615088888888.1,message: hello%2Cworld+++++
 
       const fake_job = async () => {
+        if (!request.body) {
+          throw new Error(
+            'MessageReceiver.handleRequest: request.body was falsey!'
+          );
+        }
         const plaintext = request.body;
         const envelope: ProcessedEnvelope = {
           type: Proto.Envelope.Type.CIPHERTEXT,
-          source: '+8615051220000',
-          sourceUuid: '213213',
-          sourceDevice: 213123,
+          source: '+8615088888888',
+          sourceUuid: '3bdabf91-ea32-410d-a48c-e21e245eecc8',
+          sourceDevice: 1,
           timestamp: Date.now(),
           content: plaintext,
           id: '',
           receivedAtCounter: 0,
           receivedAtDate: 0,
           messageAgeSec: 0,
-          destinationUuid: UUID.parse('3bdabf91-ea32-410d-a48c-e21e245eecc8'),
+          destinationUuid: UUID.parse('7ab4a382-3924-4ffc-b977-d7e99200885d'),
           serverGuid: '',
           serverTimestamp: 0,
         };
         log.info(`拼接${envelope}`);
-        // this.decryptAndCache(envelope, plaintext, request);
+        this.decryptAndCache(envelope, plaintext, request);
         this.processedCount += 1;
       };
 
@@ -858,6 +863,7 @@ export default class MessageReceiver
               const uuidKind =
                 this.storage.user.getOurUuidKind(destinationUuid);
               if (uuidKind === UUIDKind.Unknown) {
+                // destinationUuid和自己的对不上
                 log.info(
                   'MessageReceiver.decryptAndCacheBatch: ' +
                     `Rejecting envelope ${this.getEnvelopeId(envelope)}, ` +
@@ -957,7 +963,7 @@ export default class MessageReceiver
       });
       return;
     }
-
+    log.info('decrypted.map envelope plaintext');
     await Promise.all(
       decrypted.map(async ({ envelope, plaintext }) => {
         try {
@@ -1012,6 +1018,7 @@ export default class MessageReceiver
     envelope: UnsealedEnvelope,
     plaintext: Uint8Array
   ): Promise<void> {
+    // 信封解密
     const id = this.getEnvelopeId(envelope);
     log.info('queueing decrypted envelope', id);
 
@@ -1095,6 +1102,7 @@ export default class MessageReceiver
   }
 
   // Called after `decryptEnvelope` decrypted the message.
+  // 绑定 会记录解密时间
   private async handleDecryptedEnvelope(
     envelope: UnsealedEnvelope,
     plaintext: Uint8Array
@@ -1982,6 +1990,7 @@ export default class MessageReceiver
       await this.handleNullMessage(envelope);
       return;
     }
+    // 来电消息
     if (content.callingMessage) {
       await this.handleCallingMessage(envelope, content.callingMessage);
       return;

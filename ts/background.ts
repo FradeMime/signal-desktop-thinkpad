@@ -762,9 +762,9 @@ export async function startApp(): Promise<void> {
     }
     // const conversation = new window.Whisper.Conversation({
     //   avatars: [],
-    //   id: '001eb0a0-acff-481f-a7af-92b78ff56771',
-    //   e164: '+8615051220000',
-    //   uuid: '001eb0a0-acff-481f-a7af-92b78ff56771',
+    //   id: '3bdabf91-ea32-410d-a48c-e21e245eecc8',
+    //   e164: '+8615088888888',
+    //   uuid: '3bdabf91-ea32-410d-a48c-e21e245eecc8',
     //   type: 'private',
     //   inbox_position: 0,
     //   isPinned: false,
