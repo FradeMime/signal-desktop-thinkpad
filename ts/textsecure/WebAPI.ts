@@ -1843,19 +1843,6 @@ export function initialize({
       password = newPassword;
 
       return response;
-
-      // const varx = '1234';
-      // type Foo = {
-      //   readonly uuid: `${string}-${string}-${string}-${string}-${string}`;
-      //   readonly pni: `${string}-${string}-${string}-${string}-${string}`;
-      //   readonly deviceId?: number | undefined;
-      // };
-      // const response: Foo = {
-      //   uuid: `${varx}-${varx}-${varx}-${varx}-${varx}`,
-      //   pni: `${varx}-${varx}-${varx}-${varx}-${varx}`,
-      //   deviceId: undefined,
-      // };
-      // return response;
     }
 
     async function updateDeviceName(deviceName: string) {
@@ -1899,6 +1886,7 @@ export function initialize({
       }>;
     };
 
+    // 上传公钥
     async function registerKeys(genKeys: KeysType, uuidKind: UUIDKind) {
       log.info('registerKeys函数');
       const preKeys = genKeys.preKeys.map(key => ({
@@ -1919,13 +1907,13 @@ export function initialize({
       log.info(`keys: ${JSON.stringify(keys)}`);
       log.info(`urlParameters: ?${uuidKindToQuery(uuidKind)}`);
       log.info('屏蔽registerKeys请求');
-      // await _ajax({
-      //   isRegistration: true,
-      //   call: 'keys',
-      //   urlParameters: `?${uuidKindToQuery(uuidKind)}`,
-      //   httpType: 'PUT',
-      //   jsonData: keys,
-      // });
+      await _ajax({
+        isRegistration: true,
+        call: 'keys',
+        urlParameters: `?${uuidKindToQuery(uuidKind)}`,
+        httpType: 'PUT',
+        jsonData: keys,
+      });
     }
 
     async function setSignedPreKey(

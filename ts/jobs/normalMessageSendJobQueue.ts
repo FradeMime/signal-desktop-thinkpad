@@ -133,6 +133,7 @@ export class NormalMessageSendJobQueue extends JobQueue<NormalMessageSendJobData
 
     try {
       const conversation = message.getConversation();
+      log.info(`NormalMessageSendJobQueue.run:conversation:${JSON.stringify(conversation)}`);
       if (!conversation) {
         throw new Error(
           `could not find conversation for message with ID ${messageId}`
