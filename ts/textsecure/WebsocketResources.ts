@@ -38,6 +38,7 @@ import * as Errors from '../types/errors';
 import { SignalService as Proto } from '../protobuf';
 import * as log from '../logging/log';
 import * as Timers from '../Timers';
+import * as Bytes from '../Bytes';
 
 const THIRTY_SECONDS = 30 * durations.SECOND;
 
@@ -232,9 +233,11 @@ export default class WebSocketResource extends EventTarget {
       });
     });
     // eslint-disable-next-line camelcase
-    const log_str = new TextDecoder().decode(bytes);
+    // const log_str = new TextDecoder().decode(bytes);
     // eslint-disable-next-line camelcase
-    log.info(`ws发送数据包:${log_str}`);
+    log.info(`ws发送数据包:${Bytes.toBase64(bytes)}`);
+    log.info(`ws发送数据包:${bytes}`);
+    // this.socket.sendBytes(Buffer.from(Bytes.toBase64(bytes)));
     this.socket.sendBytes(Buffer.from(bytes));
 
     return promise;

@@ -5,6 +5,7 @@ package signalservice;
 
 option java_package = "org.whispersystems.websocket.messages.protobuf";
 
+// 与v1.30一致
 message WebSocketRequestMessage {
     optional string verb    = 1;
     optional string path    = 2;
@@ -12,6 +13,8 @@ message WebSocketRequestMessage {
     repeated string headers = 5;
     optional uint64 id      = 4;
 }
+
+
 
 message WebSocketResponseMessage {
     optional uint64 id      = 1;

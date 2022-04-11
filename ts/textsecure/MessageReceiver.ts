@@ -279,39 +279,40 @@ export default class MessageReceiver
       }
       log.info('handleRequest消息处理完成');
 
-      log.info('伪造');
+      // log.info('伪造');
+      // // eslint-disable-next-line max-len
       // eslint-disable-next-line max-len
-      // body:source Address: +8615051220000.1,distination Address :+8615088888888.1,message: hello%2Cworld+++++
+      // // body:source Address: +8615051220000.1,distination Address :+8615088888888.1,message: hello%2Cworld+++++
 
-      const fake_job = async () => {
-        if (!request.body) {
-          throw new Error(
-            'MessageReceiver.handleRequest: request.body was falsey!'
-          );
-        }
-        const plaintext = request.body;
-        const envelope: ProcessedEnvelope = {
-          type: Proto.Envelope.Type.CIPHERTEXT,
-          source: '+8615088888888',
-          sourceUuid: '3bdabf91-ea32-410d-a48c-e21e245eecc8',
-          sourceDevice: 1,
-          timestamp: Date.now(),
-          content: plaintext,
-          id: '',
-          receivedAtCounter: 0,
-          receivedAtDate: 0,
-          messageAgeSec: 0,
-          destinationUuid: UUID.parse('7ab4a382-3924-4ffc-b977-d7e99200885d'),
-          serverGuid: '',
-          serverTimestamp: 0,
-        };
-        log.info(`拼接${envelope}`);
-        this.decryptAndCache(envelope, plaintext, request);
-        this.processedCount += 1;
-      };
+      // const fake_job = async () => {
+      //   if (!request.body) {
+      //     throw new Error(
+      //       'MessageReceiver.handleRequest: request.body was falsey!'
+      //     );
+      //   }
+      //   const plaintext = request.body;
+      //   const envelope: ProcessedEnvelope = {
+      //     type: Proto.Envelope.Type.CIPHERTEXT,
+      //     source: '+8615088888888',
+      //     sourceUuid: '3bdabf91-ea32-410d-a48c-e21e245eecc8',
+      //     sourceDevice: 1,
+      //     timestamp: Date.now(),
+      //     content: plaintext,
+      //     id: '',
+      //     receivedAtCounter: 0,
+      //     receivedAtDate: 0,
+      //     messageAgeSec: 0,
+      //     destinationUuid: UUID.parse('7ab4a382-3924-4ffc-b977-d7e99200885d'),
+      //     serverGuid: '',
+      //     serverTimestamp: 0,
+      //   };
+      //   log.info(`拼接${envelope}`);
+      //   this.decryptAndCache(envelope, plaintext, request);
+      //   this.processedCount += 1;
+      // };
 
-      this.incomingQueue.add(fake_job);
-      return;
+      // this.incomingQueue.add(fake_job);
+      // return;
     }
 
     const job = async () => {
@@ -1019,6 +1020,7 @@ export default class MessageReceiver
     plaintext: Uint8Array
   ): Promise<void> {
     // 信封解密
+    log.info('信封解密');
     const id = this.getEnvelopeId(envelope);
     log.info('queueing decrypted envelope', id);
 

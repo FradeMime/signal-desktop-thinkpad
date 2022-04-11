@@ -353,9 +353,28 @@ async function _promiseAjax(
     // const auth = Bytes.toBase64(
     //   Bytes.fromString(`${options.user}.1:${options.password}`)
     // );
-    fetchOptions.headers.Authorization = `Basic ${options.user}:${options.password}`;
-    // MTIzNDU2Nzg5MDE6MTIzNDU2 12345678901:123456
-    // base64('user:pwd')
+    if (
+      options.path === 'v2/keys?identity=aci' ||
+      options.path === 'v2/keys?identity=pni' ||
+      options.path === 'v2/keys/a8e287f9-e13a-4c71-beda-15785d3b2720/*'
+    ) {
+      const auth = Bytes.toBase64(
+        Bytes.fromString(`${options.user}.1:${options.password}`)
+      );
+      fetchOptions.headers.Authorization = `Basic ${auth}`;
+      log.info('秘钥上传/获取秘钥');
+    } else if (
+      options.path === 'v1/certificate/delivery' ||
+      options.path === 'v1/messages/a8e287f9-e13a-4c71-beda-15785d3b2720'
+    ) {
+      const auth = Bytes.toBase64(
+        Bytes.fromString(`${options.user}:${options.password}`)
+      );
+      fetchOptions.headers.Authorization = `Basic ${auth}`;
+      log.info('证书获取');
+    } else {
+      fetchOptions.headers.Authorization = `Basic ${options.user}:${options.password}`;
+    }
   }
 
   if (options.contentType) {
@@ -1765,16 +1784,26 @@ export function initialize({
       //     : undefined,
       //   unrestrictedUnidentifiedAccess: false,
       // };
+      const { accessKey } = _options;
       const jsonData = {
-        signalingKey:
-          'MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMg==',
+        supportsSms: false,
         fetchesMessages: true,
-        name: _deviceName || undefined,
         _registrationId,
-        pin: '1234abcd',
-        registrationLock:
-          '0123456789012345678901234567890123456789012345678901234567890123',
+        unidentifiedAccessKey: accessKey
+          ? Bytes.toBase64(accessKey)
+          : undefined,
+        unrestrictedUnidentifiedAccess: false,
       };
+      // const jsonData = {
+      //   signalingKey:
+      //     'MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMg==',
+      //   fetchesMessages: true,
+      //   name: _deviceName || undefined,
+      //   _registrationId,
+      //   pin: '1234abcd',
+      //   registrationLock:
+      //     '0123456789012345678901234567890123456789012345678901234567890123',
+      // };
       // body参数 改
       // eslint-disable-next-line camelcase
 
@@ -1790,12 +1819,6 @@ export function initialize({
       username = number;
       password = newPassword;
 
-      // response格式
-      // const response: Readonly<{
-      //   uuid: `${string}-${string}-${string}-${string}-${string}`;
-      //   pni: `${string}-${string}-${string}-${string}-${string}`;
-      //   deviceId?: number | undefined;
-      // }>
       const response = (await _ajax({
         isRegistration: true,
         call,
@@ -2049,6 +2072,7 @@ export function initialize({
       online?: boolean,
       { accessKey }: { accessKey?: string } = {}
     ) {
+      log.info('sendMessagesUnauth');
       let jsonData;
       if (online) {
         jsonData = { messages, timestamp, online: true };
@@ -2080,7 +2104,7 @@ export function initialize({
       } else {
         jsonData = { messages, timestamp };
       }
-
+      log.info(`收件人:${destination};jsonData:${JSON.stringify(jsonData)}`);
       await _ajax({
         call: 'messages',
         httpType: 'PUT',

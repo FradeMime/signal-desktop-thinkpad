@@ -334,7 +334,7 @@ message Verified {
   }
 
   optional string destination     = 1;
-  optional string destinationUuid = 5;
+  optional string destinationUuid = 5; // v1.30 没有
   optional bytes  identityKey     = 2;
   optional State  state           = 3;
   optional bytes  nullMessage     = 4;
