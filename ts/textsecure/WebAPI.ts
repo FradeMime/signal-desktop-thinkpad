@@ -294,9 +294,9 @@ async function _promiseAjax(
   log.info(`_promiseAjax options:${JSON.stringify(options)}`);
   const timeout = typeof options.timeout === 'number' ? options.timeout : 10000;
 
-  // const agentType = options.unauthenticated ? 'unauth' : 'auth';
-  // const cacheKey = `${proxyUrl}-${agentType}`;
-  const cacheKey = 'unauth';
+  const agentType = options.unauthenticated ? 'unauth' : 'auth';
+  const cacheKey = `${proxyUrl}-${agentType}`;
+  // const cacheKey = 'unauth';
   log.info(`cacheKey:${cacheKey}`);
 
   const { timestamp } = agents[cacheKey] || { timestamp: null };
@@ -356,7 +356,7 @@ async function _promiseAjax(
     if (
       options.path === 'v2/keys?identity=aci' ||
       options.path === 'v2/keys?identity=pni' ||
-      options.path === 'v2/keys/a8e287f9-e13a-4c71-beda-15785d3b2720/*'
+      options.path === 'v2/keys/39e54fdd-59c8-4b59-a398-686d9fa5d671/*'
     ) {
       const auth = Bytes.toBase64(
         Bytes.fromString(`${options.user}.1:${options.password}`)
@@ -364,8 +364,9 @@ async function _promiseAjax(
       fetchOptions.headers.Authorization = `Basic ${auth}`;
       log.info('秘钥上传/获取秘钥');
     } else if (
+      // options.path === 'v1/messages/a8e287f9-e13a-4c71-beda-15785d3b2720'
       options.path === 'v1/certificate/delivery' ||
-      options.path === 'v1/messages/a8e287f9-e13a-4c71-beda-15785d3b2720'
+      options.path === 'v1/messages/39e54fdd-59c8-4b59-a398-686d9fa5d671'
     ) {
       const auth = Bytes.toBase64(
         Bytes.fromString(`${options.user}:${options.password}`)

@@ -1941,10 +1941,10 @@ export default class MessageSender {
       `sendSenderKeyDistributionMessage: Sending ${distributionId} with timestamp ${timestamp}`
     );
 
-    const senderKeyDistributionMessage =
-      await this.getSenderKeyDistributionMessage(distributionId);
-    contentMessage.senderKeyDistributionMessage =
-      senderKeyDistributionMessage.serialize();
+    // const senderKeyDistributionMessage =
+    //   await this.getSenderKeyDistributionMessage(distributionId);
+    // contentMessage.senderKeyDistributionMessage =
+    //   senderKeyDistributionMessage.serialize();
 
     const sendLogCallback =
       identifiers.length > 1

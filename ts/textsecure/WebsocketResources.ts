@@ -306,9 +306,10 @@ export default class WebSocketResource extends EventTarget {
     if (type !== 'binary' || !binaryData) {
       throw new Error(`Unsupported websocket message type: ${type}`);
     }
+    log.info(`未解码数据:${binaryData}`);
 
     const message = Proto.WebSocketMessage.decode(binaryData);
-    log.info(`onMessage:${binaryData};DE_message:${JSON.stringify(message)}`);
+    log.info(`DE_message:${JSON.stringify(message)}`);
     if (
       message.type === Proto.WebSocketMessage.Type.REQUEST &&
       message.request

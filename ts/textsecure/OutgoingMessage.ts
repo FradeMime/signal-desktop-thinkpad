@@ -429,7 +429,9 @@ export default class OutgoingMessage {
             const activeSession = await sessionStore.getSession(
               protocolAddress
             );
+            log.info(`acitveSession:${activeSession}`);
             if (!activeSession) {
+              log.info('No active sesssion');
               throw new Error(
                 'OutgoingMessage.doSendMessage: No active sesssion!'
               );
@@ -438,6 +440,7 @@ export default class OutgoingMessage {
             const destinationRegistrationId =
               activeSession.remoteRegistrationId();
 
+            log.info('sealedSender &&');
             if (sealedSender && senderCertificate) {
               const ciphertextMessage = await this.getCiphertextMessage({
                 identityKeyStore,
@@ -464,7 +467,7 @@ export default class OutgoingMessage {
                 protocolAddress,
                 identityKeyStore
               );
-
+              log.info('1末班');
               return {
                 type: Proto.Envelope.Type.UNIDENTIFIED_SENDER,
                 destinationDeviceId,
@@ -481,7 +484,7 @@ export default class OutgoingMessage {
             const type = ciphertextMessageTypeToEnvelopeType(
               ciphertextMessage.type()
             );
-
+            log.info(`ciphertext.type:${type}`);
             const content = ciphertextMessage.serialize().toString('base64');
 
             return {
@@ -708,6 +711,7 @@ export default class OutgoingMessage {
         ourUuid,
         identifier,
       });
+      log.info(`outgoing.sendtoid:deviceid判断：${deviceIds.length}`);
       if (deviceIds.length === 0) {
         await this.getKeysForIdentifier(identifier);
       }

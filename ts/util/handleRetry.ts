@@ -276,7 +276,7 @@ async function sendDistributionMessageOrNullMessage(
 
       try {
         const { ContentHint } = Proto.UnidentifiedSenderMessage.Message;
-
+        log.info('此处功能被屏蔽了');
         const result = await handleMessageSend(
           window.textsecure.messaging.sendSenderKeyDistributionMessage({
             contentHint: ContentHint.RESENDABLE,
@@ -405,15 +405,15 @@ async function maybeAddSenderKeyDistributionMessage({
 
   const senderKeyInfo = conversation.get('senderKeyInfo');
   if (senderKeyInfo && senderKeyInfo.distributionId) {
-    const senderKeyDistributionMessage =
-      await window.textsecure.messaging.getSenderKeyDistributionMessage(
-        senderKeyInfo.distributionId
-      );
+    // const senderKeyDistributionMessage =
+    //   await window.textsecure.messaging.getSenderKeyDistributionMessage(
+    //     senderKeyInfo.distributionId
+    //   );
 
     return {
       contentProto: {
         ...contentProto,
-        senderKeyDistributionMessage: senderKeyDistributionMessage.serialize(),
+        // senderKeyDistributionMessage: senderKeyDistributionMessage.serialize(),
       },
       groupId: conversation.get('groupId'),
     };

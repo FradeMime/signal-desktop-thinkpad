@@ -4,7 +4,8 @@
 /* eslint-disable no-bitwise */
 /* eslint-disable camelcase */
 
-import { isNumber, map } from 'lodash';
+// import { isNumber, map } from 'lodash';
+import { map } from 'lodash';
 import PQueue from 'p-queue';
 import { v4 as getGuid } from 'uuid';
 
@@ -14,16 +15,16 @@ import type {
   UnidentifiedSenderMessageContent,
 } from '@signalapp/signal-client';
 import {
-  DecryptionErrorMessage,
+  // DecryptionErrorMessage,
   groupDecrypt,
   PlaintextContent,
   PreKeySignalMessage,
-  processSenderKeyDistributionMessage,
+  // processSenderKeyDistributionMessage,
   ProtocolAddress,
   PublicKey,
   sealedSenderDecryptMessage,
   sealedSenderDecryptToUsmc,
-  SenderKeyDistributionMessage,
+  // SenderKeyDistributionMessage,
   signalDecrypt,
   signalDecryptPreKey,
   SignalMessage,
@@ -76,7 +77,11 @@ import type {
   ProcessedEnvelope,
   IRequestHandler,
 } from './Types.d';
-import type { ReconnectEvent, EnvelopeEvent } from './messageReceiverEvents';
+import type {
+  ReconnectEvent,
+  EnvelopeEvent,
+  RetryRequestEvent,
+} from './messageReceiverEvents';
 import {
   EmptyEvent,
   ProgressEvent,
@@ -87,7 +92,6 @@ import {
   SentEvent,
   ProfileKeyUpdateEvent,
   MessageEvent,
-  RetryRequestEvent,
   ReadEvent,
   ViewEvent,
   ConfigurationEvent,
@@ -1254,16 +1258,18 @@ export default class MessageReceiver
     try {
       const content = Proto.Content.decode(plaintext);
 
-      if (
-        content.senderKeyDistributionMessage &&
-        Bytes.isNotEmpty(content.senderKeyDistributionMessage)
-      ) {
-        await this.handleSenderKeyDistributionMessage(
-          stores,
-          envelope,
-          content.senderKeyDistributionMessage
-        );
-      }
+      log.info(`content:${content}`);
+      // v1.30
+      // if (
+      //   content.senderKeyDistributionMessage &&
+      //   Bytes.isNotEmpty(content.senderKeyDistributionMessage)
+      // ) {
+      //   await this.handleSenderKeyDistributionMessage(
+      //     stores,
+      //     envelope,
+      //     content.senderKeyDistributionMessage
+      //   );
+      // }
     } catch (error) {
       log.error(
         'MessageReceiver.decryptEnvelope: Failed to process sender ' +
@@ -1548,7 +1554,7 @@ export default class MessageReceiver
         );
       }
       const signalMessage = SignalMessage.deserialize(Buffer.from(ciphertext));
-
+      
       const plaintext = await this.storage.protocol.enqueueSessionJob(
         address,
         async () =>
@@ -1579,7 +1585,13 @@ export default class MessageReceiver
       const preKeySignalMessage = PreKeySignalMessage.deserialize(
         Buffer.from(ciphertext)
       );
-
+      const prekeyId = preKeySignalMessage.preKeyId;
+      const regisId = preKeySignalMessage.registrationId;
+      const signprekeyid = preKeySignalMessage.signedPreKeyId;
+      const verid = preKeySignalMessage.version;
+      log.info(
+        `prekeyid:${prekeyId};regisid:${regisId};signprekeyid:${signprekeyid};verid:${verid}`
+      );
       const plaintext = await this.storage.protocol.enqueueSessionJob(
         address,
         async () =>
@@ -1967,16 +1979,16 @@ export default class MessageReceiver
     const content = Proto.Content.decode(plaintext);
     const envelope = await this.maybeUpdateTimestamp(incomingEnvelope);
 
-    if (
-      content.decryptionErrorMessage &&
-      Bytes.isNotEmpty(content.decryptionErrorMessage)
-    ) {
-      await this.handleDecryptionError(
-        envelope,
-        content.decryptionErrorMessage
-      );
-      return;
-    }
+    // if (
+    //   content.decryptionErrorMessage &&
+    //   Bytes.isNotEmpty(content.decryptionErrorMessage)
+    // ) {
+    //   await this.handleDecryptionError(
+    //     envelope,
+    //     content.decryptionErrorMessage
+    //   );
+    //   return;
+    // }
     if (content.syncMessage) {
       await this.handleSyncMessage(
         envelope,
@@ -2005,100 +2017,102 @@ export default class MessageReceiver
       await this.handleTypingMessage(envelope, content.typingMessage);
       return;
     }
-    if (content.storyMessage) {
-      const logId = this.getEnvelopeId(envelope);
-      log.info(
-        `innerHandleContentMessage/${logId}: Dropping incoming message with storyMessage field`
-      );
-      this.removeFromCache(envelope);
-      return;
-    }
+    // if (content.storyMessage) {
+    //   const logId = this.getEnvelopeId(envelope);
+    //   log.info(
+    // eslint-disable-next-line max-len
+    //     `innerHandleContentMessage/${logId}: Dropping incoming message with storyMessage field`
+    //   );
+    //   this.removeFromCache(envelope);
+    //   return;
+    // }
 
     this.removeFromCache(envelope);
 
-    if (Bytes.isEmpty(content.senderKeyDistributionMessage)) {
-      throw new Error('Unsupported content message');
-    }
+    // if (Bytes.isEmpty(content.senderKeyDistributionMessage)) {
+    //   throw new Error('Unsupported content message');
+    // }
   }
 
-  private async handleDecryptionError(
-    envelope: UnsealedEnvelope,
-    decryptionError: Uint8Array
-  ) {
-    const logId = this.getEnvelopeId(envelope);
-    log.info(`handleDecryptionError: ${logId}`);
+  // private async handleDecryptionError(
+  //   envelope: UnsealedEnvelope,
+  //   decryptionError: Uint8Array
+  // ) {
+  //   const logId = this.getEnvelopeId(envelope);
+  //   log.info(`handleDecryptionError: ${logId}`);
 
-    const buffer = Buffer.from(decryptionError);
-    const request = DecryptionErrorMessage.deserialize(buffer);
+  //   const buffer = Buffer.from(decryptionError);
+  //   const request = DecryptionErrorMessage.deserialize(buffer);
 
-    const { sourceUuid, sourceDevice } = envelope;
-    if (!sourceUuid || !sourceDevice) {
-      log.error(`handleDecryptionError/${logId}: Missing uuid or device!`);
-      this.removeFromCache(envelope);
-      return;
-    }
+  //   const { sourceUuid, sourceDevice } = envelope;
+  //   if (!sourceUuid || !sourceDevice) {
+  //     log.error(`handleDecryptionError/${logId}: Missing uuid or device!`);
+  //     this.removeFromCache(envelope);
+  //     return;
+  //   }
 
-    const event = new RetryRequestEvent(
-      {
-        groupId: envelope.groupId,
-        requesterDevice: sourceDevice,
-        requesterUuid: sourceUuid,
-        ratchetKey: request.ratchetKey(),
-        senderDevice: request.deviceId(),
-        sentAt: request.timestamp(),
-      },
-      () => this.removeFromCache(envelope)
-    );
-    await this.dispatchEvent(event);
-  }
+  //   const event = new RetryRequestEvent(
+  //     {
+  //       groupId: envelope.groupId,
+  //       requesterDevice: sourceDevice,
+  //       requesterUuid: sourceUuid,
+  //       ratchetKey: request.ratchetKey(),
+  //       senderDevice: request.deviceId(),
+  //       sentAt: request.timestamp(),
+  //     },
+  //     () => this.removeFromCache(envelope)
+  //   );
+  //   await this.dispatchEvent(event);
+  // }
 
-  private async handleSenderKeyDistributionMessage(
-    stores: LockedStores,
-    envelope: ProcessedEnvelope,
-    distributionMessage: Uint8Array
-  ): Promise<void> {
-    const envelopeId = this.getEnvelopeId(envelope);
-    log.info(`handleSenderKeyDistributionMessage/${envelopeId}`);
+  // private async handleSenderKeyDistributionMessage(
+  //   stores: LockedStores,
+  //   envelope: ProcessedEnvelope,
+  //   distributionMessage: Uint8Array
+  // ): Promise<void> {
+  //   const envelopeId = this.getEnvelopeId(envelope);
+  //   log.info(`handleSenderKeyDistributionMessage/${envelopeId}`);
 
-    // Note: we don't call removeFromCache here because this message can be combined
-    //   with a dataMessage, for example. That processing will dictate cache removal.
+  //   // Note: we don't call removeFromCache here because this message can be combined
+  //   //   with a dataMessage, for example. That processing will dictate cache removal.
 
-    const identifier = envelope.sourceUuid;
-    const { sourceDevice } = envelope;
-    if (!identifier) {
-      throw new Error(
-        `handleSenderKeyDistributionMessage: No identifier for envelope ${envelopeId}`
-      );
-    }
-    if (!isNumber(sourceDevice)) {
-      throw new Error(
-        `handleSenderKeyDistributionMessage: Missing sourceDevice for envelope ${envelopeId}`
-      );
-    }
+  //   const identifier = envelope.sourceUuid;
+  //   const { sourceDevice } = envelope;
+  //   if (!identifier) {
+  //     throw new Error(
+  //       `handleSenderKeyDistributionMessage: No identifier for envelope ${envelopeId}`
+  //     );
+  //   }
+  //   if (!isNumber(sourceDevice)) {
+  //     throw new Error(
+  // eslint-disable-next-line max-len
+  //       `handleSenderKeyDistributionMessage: Missing sourceDevice for envelope ${envelopeId}`
+  //     );
+  //   }
 
-    const sender = ProtocolAddress.new(identifier, sourceDevice);
-    const senderKeyDistributionMessage =
-      SenderKeyDistributionMessage.deserialize(
-        Buffer.from(distributionMessage)
-      );
-    const { destinationUuid } = envelope;
-    const senderKeyStore = new SenderKeys({ ourUuid: destinationUuid });
-    const address = new QualifiedAddress(
-      destinationUuid,
-      Address.create(identifier, sourceDevice)
-    );
+  //   const sender = ProtocolAddress.new(identifier, sourceDevice);
+  //   const senderKeyDistributionMessage =
+  //     SenderKeyDistributionMessage.deserialize(
+  //       Buffer.from(distributionMessage)
+  //     );
+  //   const { destinationUuid } = envelope;
+  //   const senderKeyStore = new SenderKeys({ ourUuid: destinationUuid });
+  //   const address = new QualifiedAddress(
+  //     destinationUuid,
+  //     Address.create(identifier, sourceDevice)
+  //   );
 
-    await this.storage.protocol.enqueueSenderKeyJob(
-      address,
-      () =>
-        processSenderKeyDistributionMessage(
-          sender,
-          senderKeyDistributionMessage,
-          senderKeyStore
-        ),
-      stores.zone
-    );
-  }
+  //   await this.storage.protocol.enqueueSenderKeyJob(
+  //     address,
+  //     () =>
+  //       processSenderKeyDistributionMessage(
+  //         sender,
+  //         senderKeyDistributionMessage,
+  //         senderKeyStore
+  //       ),
+  //     stores.zone
+  //   );
+  // }
 
   private async handleCallingMessage(
     envelope: ProcessedEnvelope,
