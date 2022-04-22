@@ -299,7 +299,7 @@ export const ConversationList: React.FC<PropsType> = ({
           );
           break;
         }
-        case RowType.CreateNewGroup:
+        case RowType.CreateNewGroup: // 新建群组 按钮
           result = (
             <CreateNewGroupButton
               i18n={i18n}

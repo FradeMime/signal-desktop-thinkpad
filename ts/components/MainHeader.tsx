@@ -305,7 +305,7 @@ export class MainHeader extends React.Component<PropsType, StateType> {
         />
         {!isSearching && (
           <button
-            aria-label={i18n('newConversation')}  // 新对话按钮
+            aria-label={i18n('newConversation')} // 新对话按钮
             className="module-main-header__compose-icon"
             onClick={startComposing}
             title={i18n('newConversation')}

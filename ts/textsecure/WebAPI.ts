@@ -356,7 +356,7 @@ async function _promiseAjax(
     if (
       options.path === 'v2/keys?identity=aci' ||
       options.path === 'v2/keys?identity=pni' ||
-      options.path === 'v2/keys/39e54fdd-59c8-4b59-a398-686d9fa5d671/*'
+      options.path === 'v2/keys/0ec77454-3b6a-4eb5-8a59-6f1871130aee/*'
     ) {
       const auth = Bytes.toBase64(
         Bytes.fromString(`${options.user}.1:${options.password}`)
@@ -366,7 +366,7 @@ async function _promiseAjax(
     } else if (
       // options.path === 'v1/messages/a8e287f9-e13a-4c71-beda-15785d3b2720'
       options.path === 'v1/certificate/delivery' ||
-      options.path === 'v1/messages/39e54fdd-59c8-4b59-a398-686d9fa5d671'
+      options.path === 'v1/messages/0ec77454-3b6a-4eb5-8a59-6f1871130aee'
     ) {
       const auth = Bytes.toBase64(
         Bytes.fromString(`${options.user}:${options.password}`)
@@ -1139,9 +1139,6 @@ export function initialize({
       window.Whisper.events.trigger('unlinkAndDisconnect');
     });
 
-    // username = '12345678901';
-    // password = '123456';
-    // webSocket登陆部分 使用username+password登陆
     if (useWebSocket) {
       socketManager.authenticate({ username, password });
     }
@@ -1158,11 +1155,9 @@ export function initialize({
 
     let fetchForLinkPreviews: linkPreviewFetch.FetchFn;
     if (proxyUrl) {
-      log.info('代理模式');
       const agent = new ProxyAgent(proxyUrl);
       fetchForLinkPreviews = (href, init) => fetch(href, { ...init, agent });
     } else {
-      log.info('非代理模式');
       fetchForLinkPreviews = fetch;
     }
 

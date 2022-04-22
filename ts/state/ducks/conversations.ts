@@ -3106,6 +3106,8 @@ export function reducer(
     };
   }
   if (action.type === 'SHOW_INBOX') {
+    // 点击搜索出的联系人
+    log.info(`点击联系人state:${state}`);
     return {
       ...omit(state, 'composer'),
       showArchived: false,
@@ -3330,6 +3332,7 @@ export function reducer(
       );
       return state;
     }
+    log.info(`composer.step:${composer.step}`);
 
     return {
       ...state,

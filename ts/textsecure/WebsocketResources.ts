@@ -188,14 +188,12 @@ export default class WebSocketResource extends EventTarget {
   public async sendRequest(
     options: SendRequestOptions
   ): Promise<SendRequestResult> {
-    log.info('sendRequest函数内');
     const id = this.outgoingId;
     strictAssert(!this.outgoingMap.has(id), 'Duplicate outgoing request');
 
     // eslint-disable-next-line no-bitwise
     this.outgoingId = Math.max(1, (this.outgoingId + 1) & 0x7fffffff);
-    log.info(`sendRequest id:${id};outgoingId:${this.outgoingId}`);
-    log.info(`sendRequest options:${JSON.stringify(options)}`);
+    log.info(`webSocket发送数据内容:${JSON.stringify(options)}`);
     const bytes = Proto.WebSocketMessage.encode({
       type: Proto.WebSocketMessage.Type.REQUEST,
       request: {
@@ -212,7 +210,6 @@ export default class WebSocketResource extends EventTarget {
     );
 
     strictAssert(!this.shuttingDown, 'Cannot send request, shutting down');
-    log.info('addActive');
     this.addActive(id);
     const promise = new Promise<SendRequestResult>((resolve, reject) => {
       let timer = options.timeout
@@ -233,13 +230,7 @@ export default class WebSocketResource extends EventTarget {
       });
     });
     // eslint-disable-next-line camelcase
-    // const log_str = new TextDecoder().decode(bytes);
-    // eslint-disable-next-line camelcase
-    log.info(`ws发送数据包:${Bytes.toBase64(bytes)}`);
-    log.info(`ws发送数据包:${bytes}`);
-    // this.socket.sendBytes(Buffer.from(Bytes.toBase64(bytes)));
     this.socket.sendBytes(Buffer.from(bytes));
-
     return promise;
   }
 
@@ -302,7 +293,6 @@ export default class WebSocketResource extends EventTarget {
   }
 
   private onMessage({ type, binaryData }: IMessage): void {
-    log.info('onMessage是干什么的？？？？');
     if (type !== 'binary' || !binaryData) {
       throw new Error(`Unsupported websocket message type: ${type}`);
     }
@@ -314,7 +304,6 @@ export default class WebSocketResource extends EventTarget {
       message.type === Proto.WebSocketMessage.Type.REQUEST &&
       message.request
     ) {
-      log.info('if');
       const handleRequest =
         this.options.handleRequest ||
         (request => request.respond(404, 'Not found'));
@@ -344,7 +333,6 @@ export default class WebSocketResource extends EventTarget {
       message.type === Proto.WebSocketMessage.Type.RESPONSE &&
       message.response
     ) {
-      log.info('else if');
       const { response } = message;
       strictAssert(response.id, 'response without id');
 

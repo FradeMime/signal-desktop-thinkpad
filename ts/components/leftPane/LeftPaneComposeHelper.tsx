@@ -19,6 +19,7 @@ import {
 import { assert } from '../../util/assert';
 import { missingCaseError } from '../../util/missingCaseError';
 import { getUsernameFromSearch } from '../../types/Username';
+import * as log from '../../logging/log';
 
 export type LeftPaneComposePropsType = {
   composeContacts: ReadonlyArray<ContactListItemConversationType>;
@@ -153,6 +154,12 @@ export class LeftPaneComposeHelper extends LeftPaneHelper<LeftPaneComposePropsTy
               this.phoneNumber,
               'LeftPaneComposeHelper: we should have a phone number if the top button is "Start new conversation"'
             );
+            log.info(
+              `rowTopButton.StartNewConversation:${phoneNumberInstance.format(
+                this.phoneNumber,
+                PhoneNumberFormat.E164
+              )}`
+            );
             return {
               type: RowType.StartNewConversation,
               phoneNumber: phoneNumberInstance.format(
@@ -161,6 +168,7 @@ export class LeftPaneComposeHelper extends LeftPaneHelper<LeftPaneComposePropsTy
               ),
             };
           case TopButton.CreateNewGroup:
+            log.info('topbutton 新建群组按钮');
             return { type: RowType.CreateNewGroup };
           default:
             throw missingCaseError(topButton);

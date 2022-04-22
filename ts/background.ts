@@ -762,9 +762,9 @@ export async function startApp(): Promise<void> {
     }
     // const conversation = new window.Whisper.Conversation({
     //   avatars: [],
-    //   id: '39e54fdd-59c8-4b59-a398-686d9fa5d671',
-    //   e164: '+8613944444444',
-    //   uuid: '39e54fdd-59c8-4b59-a398-686d9fa5d671',
+    //   id: '0ec77454-3b6a-4eb5-8a59-6f1871130aee',
+    //   e164: '+8613966666666',
+    //   uuid: '0ec77454-3b6a-4eb5-8a59-6f1871130aee',
     //   type: 'private',
     //   inbox_position: 0,
     //   isPinned: true,
@@ -776,7 +776,7 @@ export async function startApp(): Promise<void> {
     //   version: 0,
     // });
     // await window.Signal.Data.saveConversation(conversation.attributes);
-    // window.ConversationController.getOrCreate('+8613944444444', 'private');
+    // window.ConversationController.getOrCreate('+8613966666666', 'private');
     Views.Initialization.setMessage(window.i18n('loading'));
 
     // 版本迁移？

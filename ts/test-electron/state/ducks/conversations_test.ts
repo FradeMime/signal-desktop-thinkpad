@@ -1312,7 +1312,7 @@ describe('both/state/ducks/conversations', () => {
     });
 
     describe('SHOW_INBOX', () => {
-      it('is a no-op when already at the inbox', () => {
+      it('is a no-op when already at the inb3ox', () => {
         const state = getEmptyState();
         const action = showInbox();
         const result = reducer(state, action);

@@ -21,5 +21,6 @@ export function isConversationSMSOnly(
     return true;
   }
 
-  return conversation.discoveredUnregisteredAt !== undefined;
+  // return conversation.discoveredUnregisteredAt !== undefined;
+  return false;
 }
