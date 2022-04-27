@@ -279,8 +279,6 @@ async function _promiseAjax(
   providedUrl: string | null,
   options: PromiseAjaxOptionsType
 ): Promise<unknown> {
-  // HTTP报错位置
-  log.info('_promiseAjax函数');
   const { proxyUrl, socketManager } = options;
   const url = providedUrl || `${options.host}/${options.path}`;
   log.info(`_promiseAjax url:${url}`);

@@ -38,7 +38,7 @@ import * as Errors from '../types/errors';
 import { SignalService as Proto } from '../protobuf';
 import * as log from '../logging/log';
 import * as Timers from '../Timers';
-import * as Bytes from '../Bytes';
+// import * as Bytes from '../Bytes';
 
 const THIRTY_SECONDS = 30 * durations.SECOND;
 
