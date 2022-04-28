@@ -194,6 +194,7 @@ export default class AccountManager extends EventTarget {
               SIGNED_KEY_GEN_BATCH_SIZE,
               kind
             );
+            // 上传公钥
             await this.server.registerKeys(keys, kind);
             await this.confirmKeys(keys, kind);
           })

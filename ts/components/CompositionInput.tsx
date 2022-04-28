@@ -223,6 +223,7 @@ export function CompositionInput(props: Props): React.ReactElement {
     emojiCompletion.reset();
   };
 
+  // 按下enter或者点击CompositionArea__send-button   发送聊天数据
   const submit = () => {
     const timestamp = Date.now();
     const quill = quillRef.current;

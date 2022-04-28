@@ -77,14 +77,10 @@ export class IncomingWebSocketRequest {
 
   public respond(status: number, message: string): void {
     log.info('websocketresources respond');
-    log.info(`respond number:${status};message:${message}`);
-    // message就是接收的消息
     const bytes = Proto.WebSocketMessage.encode({
       type: Proto.WebSocketMessage.Type.RESPONSE,
       response: { id: this.id, message, status },
     }).finish();
-    log.info('确认受到消息');
-    log.info(`bytes:${bytes};buffer:${Buffer.from(bytes)}`);
 
     this.sendBytes(Buffer.from(bytes));
   }
@@ -142,7 +138,6 @@ export default class WebSocketResource extends EventTarget {
     private readonly options: WebSocketResourceOptions = {}
   ) {
     super();
-    log.info('WebSocketResource 构造函数');
     this.boundOnMessage = this.onMessage.bind(this);
 
     socket.on('message', this.boundOnMessage);
@@ -167,7 +162,6 @@ export default class WebSocketResource extends EventTarget {
 
     socket.on('close', (code, reason) => {
       this.closed = true;
-
       log.warn('WebSocketResource: Socket closed');
       this.dispatchEvent(new CloseEvent(code, reason || 'normal'));
     });
@@ -184,7 +178,6 @@ export default class WebSocketResource extends EventTarget {
     return super.addEventListener(name, handler);
   }
 
-  // 登陆成功后，基于已建立的ws连接发送 数据包
   public async sendRequest(
     options: SendRequestOptions
   ): Promise<SendRequestResult> {
@@ -459,6 +452,7 @@ class KeepAlive {
     }
 
     log.info('WebSocketResources: Sending a keepalive message');
+    log.info(`心跳path:${this.path}`);
     const { status } = await this.wsr.sendRequest({
       verb: 'GET',
       path: this.path,

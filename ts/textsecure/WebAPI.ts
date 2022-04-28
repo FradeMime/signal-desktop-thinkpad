@@ -286,7 +286,6 @@ async function _promiseAjax(
   // URL
   const redactedURL = options.redactUrl ? options.redactUrl(url) : url;
 
-  // 未经授权的标签
   const unauthLabel = options.unauthenticated ? ' (unauth)' : '';
   log.info(`${options.type} ${logType} ${redactedURL}${unauthLabel}`);
   log.info(`_promiseAjax options:${JSON.stringify(options)}`);
@@ -489,6 +488,7 @@ async function _promiseAjax(
   return result;
 }
 
+// 调用_promiseAjax
 async function _retryAjax(
   url: string | null,
   options: PromiseAjaxOptionsType,
@@ -499,7 +499,6 @@ async function _retryAjax(
   const limit = providedLimit || 3;
 
   try {
-    log.info(`_retryAjax options:${JSON.stringify(options)}`);
     return await _promiseAjax(url, options);
   } catch (e) {
     if (e instanceof HTTPError && e.code === -1 && count < limit) {
@@ -538,12 +537,12 @@ function _outerAjax(
   options: PromiseAjaxOptionsType
 ): Promise<unknown>;
 
+// 调用_outerAjax
 async function _outerAjax(
   url: string | null,
   options: PromiseAjaxOptionsType
 ): Promise<unknown> {
   options.stack = new Error().stack; // just in case, save stack here.
-  log.info('_outerAjax函数');
   return _retryAjax(url, options);
 }
 
@@ -662,11 +661,6 @@ export type MessageType = Readonly<{
 }>;
 
 type AjaxOptionsType = {
-  // 增加
-  // registrationLock?: string;
-  // pin?: string;
-  // signalingKey?: string;
-  // 旧
   basicAuth?: string;
   call: keyof typeof URL_CALLS;
   contentType?: string;
@@ -1678,15 +1672,6 @@ export function initialize({
     // v1/accounts/sms/code/+12345678901
     async function requestVerificationSMS(_number: string, _token: string) {
       log.info('requestVerificationSMS函数');
-      // eslint-disable-next-line global-require
-      // const req = http.request(
-      //   'http://124.232.156.201:28810/v1/accounts/sms/code/+12345678901',
-      //   res => {
-      //     log.info(`http.request: res.statusCode=${res.statusCode}`);
-      //   }
-      // );
-      // req.end(); // 必须调用end()方法结束请求
-
       await _ajax({
         call: 'accounts',
         httpType: 'GET',

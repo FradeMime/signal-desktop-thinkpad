@@ -282,40 +282,6 @@ export default class MessageReceiver
         });
       }
       log.info('handleRequest消息处理完成');
-
-      // log.info('伪造');
-      // // eslint-disable-next-line max-len
-      // eslint-disable-next-line max-len
-      // // body:source Address: +8615051220000.1,distination Address :+8615088888888.1,message: hello%2Cworld+++++
-
-      // const fake_job = async () => {
-      //   if (!request.body) {
-      //     throw new Error(
-      //       'MessageReceiver.handleRequest: request.body was falsey!'
-      //     );
-      //   }
-      //   const plaintext = request.body;
-      //   const envelope: ProcessedEnvelope = {
-      //     type: Proto.Envelope.Type.CIPHERTEXT,
-      //     source: '+8615088888888',
-      //     sourceUuid: '3bdabf91-ea32-410d-a48c-e21e245eecc8',
-      //     sourceDevice: 1,
-      //     timestamp: Date.now(),
-      //     content: plaintext,
-      //     id: '',
-      //     receivedAtCounter: 0,
-      //     receivedAtDate: 0,
-      //     messageAgeSec: 0,
-      //     destinationUuid: UUID.parse('7ab4a382-3924-4ffc-b977-d7e99200885d'),
-      //     serverGuid: '',
-      //     serverTimestamp: 0,
-      //   };
-      //   log.info(`拼接${envelope}`);
-      //   this.decryptAndCache(envelope, plaintext, request);
-      //   this.processedCount += 1;
-      // };
-
-      // this.incomingQueue.add(fake_job);
       // return;
     }
 
@@ -342,7 +308,6 @@ export default class MessageReceiver
         const envelope: ProcessedEnvelope = {
           // Make non-private envelope IDs dashless so they don't get redacted
           //   from logs
-          // 修改信封的uuid 删除-符号
           id: getGuid().replace(/-/g, ''),
           receivedAtCounter: window.Signal.Util.incrementMessageCounter(),
           receivedAtDate: Date.now(),
@@ -1498,6 +1463,7 @@ export default class MessageReceiver
     ciphertext: Uint8Array,
     uuidKind: UUIDKind
   ): Promise<Uint8Array | undefined> {
+    log.info('innerDecrypt调用lib解密');
     const { sessionStore, identityKeyStore, zone } = stores;
 
     const logId = this.getEnvelopeId(envelope);
@@ -1554,7 +1520,6 @@ export default class MessageReceiver
         );
       }
       const signalMessage = SignalMessage.deserialize(Buffer.from(ciphertext));
-      
       const plaintext = await this.storage.protocol.enqueueSessionJob(
         address,
         async () =>
