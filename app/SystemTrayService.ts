@@ -195,6 +195,7 @@ export class SystemTrayService {
       forceOnTop(browserWindow);
     });
 
+    // 鼠标悬停时的文本
     result.setToolTip(this.messages.signalDesktop.message);
 
     return result;
@@ -237,6 +238,7 @@ function getDefaultIcon(): NativeImage {
   return defaultIcon;
 }
 
+//
 function forceOnTop(browserWindow: BrowserWindow) {
   // On some versions of GNOME the window may not be on top when restored.
   // This trick should fix it.

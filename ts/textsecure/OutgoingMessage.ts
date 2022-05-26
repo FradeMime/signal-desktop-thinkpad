@@ -429,7 +429,7 @@ export default class OutgoingMessage {
             const activeSession = await sessionStore.getSession(
               protocolAddress
             );
-            log.info(`acitveSession:${activeSession}`);
+            log.info(`acitveSession:${JSON.stringify(activeSession)}`);
             if (!activeSession) {
               log.info('No active sesssion');
               throw new Error(
@@ -439,8 +439,9 @@ export default class OutgoingMessage {
 
             const destinationRegistrationId =
               activeSession.remoteRegistrationId();
-
-            log.info('sealedSender &&');
+            log.info(
+              `activeSession.destinationRegistrationId:${destinationRegistrationId}`
+            );
             if (sealedSender && senderCertificate) {
               const ciphertextMessage = await this.getCiphertextMessage({
                 identityKeyStore,

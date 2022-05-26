@@ -779,7 +779,7 @@ export async function startApp(): Promise<void> {
     // window.ConversationController.getOrCreate('+8613966666666', 'private');
     Views.Initialization.setMessage(window.i18n('loading'));
 
-    // 版本迁移？
+    // 版本迁移
     let isMigrationWithIndexComplete = false;
     log.info(
       `Starting background data migration. Target version: ${Message.CURRENT_SCHEMA_VERSION}`

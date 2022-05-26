@@ -150,7 +150,7 @@ declare class QRCode {
           correctLevel?: QRCodeCorrectLevel;
           height?: number;
           text?: string;
-          width?: number;
+          width?: number; 
         }
   );
   makeCode(sText: string): void;

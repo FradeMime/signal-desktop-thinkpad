@@ -275,6 +275,7 @@ function getHostname(url: string): string {
   return urlObject.hostname;
 }
 
+// 后续这个函数需要重新调整下
 async function _promiseAjax(
   providedUrl: string | null,
   options: PromiseAjaxOptionsType
@@ -286,20 +287,15 @@ async function _promiseAjax(
   // URL
   const redactedURL = options.redactUrl ? options.redactUrl(url) : url;
 
-  const unauthLabel = options.unauthenticated ? ' (unauth)' : '';
-  log.info(`${options.type} ${logType} ${redactedURL}${unauthLabel}`);
-  log.info(`_promiseAjax options:${JSON.stringify(options)}`);
+  // const unauthLabel = options.unauthenticated ? ' (unauth)' : '';
   const timeout = typeof options.timeout === 'number' ? options.timeout : 10000;
 
   const agentType = options.unauthenticated ? 'unauth' : 'auth';
   const cacheKey = `${proxyUrl}-${agentType}`;
   // const cacheKey = 'unauth';
-  log.info(`cacheKey:${cacheKey}`);
 
   const { timestamp } = agents[cacheKey] || { timestamp: null };
   if (!timestamp || timestamp + FIVE_MINUTES < Date.now()) {
-    log.info(`timestamp:${timestamp};dateTime:${Date.now()}`);
-    log.info('agents 代理变换');
     if (timestamp) {
       log.info(`Cycling agent for type ${cacheKey}`);
     }
@@ -310,9 +306,7 @@ async function _promiseAjax(
       timestamp: Date.now(),
     };
   }
-  const { agent } = agents[cacheKey]; // http模块参数
-  log.info(`agent :${JSON.stringify(agent)}`);
-  // agent.protocol = '';
+  // const { agent } = agents[cacheKey]; // http模块参数
   const fetchOptions = {
     method: options.type,
     body: options.data,
@@ -346,10 +340,6 @@ async function _promiseAjax(
       fetchOptions.headers['Unidentified-Access-Key'] = accessKey;
     }
   } else if (options.user && options.password) {
-    log.info('_promiseAjax构造Authorization参数');
-    // const auth = Bytes.toBase64(
-    //   Bytes.fromString(`${options.user}.1:${options.password}`)
-    // );
     if (
       options.path === 'v2/keys?identity=aci' ||
       options.path === 'v2/keys?identity=pni' ||
@@ -359,9 +349,8 @@ async function _promiseAjax(
         Bytes.fromString(`${options.user}.1:${options.password}`)
       );
       fetchOptions.headers.Authorization = `Basic ${auth}`;
-      log.info('秘钥上传/获取秘钥');
     } else if (
-      // options.path === 'v1/messages/a8e287f9-e13a-4c71-beda-15785d3b2720'
+      // 'v1/messages/a8e287f9-e13a-4c71-beda-15785d3b2720' 发送消息接口
       options.path === 'v1/certificate/delivery' ||
       options.path === 'v1/messages/0ec77454-3b6a-4eb5-8a59-6f1871130aee'
     ) {
@@ -369,7 +358,6 @@ async function _promiseAjax(
         Bytes.fromString(`${options.user}:${options.password}`)
       );
       fetchOptions.headers.Authorization = `Basic ${auth}`;
-      log.info('证书获取');
     } else {
       fetchOptions.headers.Authorization = `Basic ${options.user}:${options.password}`;
     }
@@ -379,12 +367,9 @@ async function _promiseAjax(
     fetchOptions.headers['Content-Type'] = options.contentType;
   }
   log.info(`fetch参数信息fetchOptions:${JSON.stringify(fetchOptions)}`);
-  // log.info(`fetch.agent参数信息:${JSON.stringify(fetchOptions.agent)}`);
-  // fetchOptions.agent['protocol']='http:';
   let response: Response;
   let result: string | Uint8Array | Readable | unknown;
   try {
-    log.info(`socketManager判断: url=${url}`);
     response = socketManager
       ? await socketManager.fetch(url, fetchOptions)
       : await fetch(url, fetchOptions);
@@ -393,8 +378,6 @@ async function _promiseAjax(
       options.serverUrl &&
       getHostname(options.serverUrl) === getHostname(url)
     ) {
-      log.info('await handlestatus code');
-      // log.info(`sereverUrl:${getHostname(options.serverUrl)}`);
       await handleStatusCode(response.status);
 
       if (!unauthenticated && response.status === 401) {
@@ -425,14 +408,12 @@ async function _promiseAjax(
     }
   } catch (e) {
     // TypeError: Protocol "http:" not supported. Expected "https:"
-    log.info('catch(e)异常内');
     log.error(options.type, logType, redactedURL, 0, 'Error');
     const stack = `${e.stack}\nInitial stack:\n${options.stack}`;
     throw makeHTTPError('promiseAjax catch', 0, {}, e.toString(), stack);
   }
 
   if (!isSuccess(response.status)) {
-    log.info('网络失败信息');
     log.error(options.type, logType, redactedURL, response.status, 'Error');
 
     throw makeHTTPError(
