@@ -8,6 +8,7 @@ import { encryptProfileData } from '../util/encryptProfileData';
 import { getProfile } from '../util/getProfile';
 import { handleMessageSend } from '../util/handleMessageSend';
 
+// 配置文件上传
 export async function writeProfile(
   conversation: ConversationType,
   avatarBuffer?: Uint8Array

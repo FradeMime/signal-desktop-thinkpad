@@ -81,6 +81,7 @@ import { ToastFailedToFetchUsername } from '../../components/ToastFailedToFetchU
 import { isValidUsername } from '../../types/Username';
 
 import type { NoopActionType } from './noop';
+// import { profile } from 'console';
 
 // State
 
@@ -1099,6 +1100,7 @@ function myProfileChanged(
   unknown,
   NoopActionType | ToggleProfileEditorErrorActionType
 > {
+  log.info(`更改我的Profile:${JSON.stringify(profileData)}`);
   return async (dispatch, getState) => {
     const conversation = getMe(getState());
 

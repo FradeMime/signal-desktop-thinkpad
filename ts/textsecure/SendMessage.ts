@@ -521,6 +521,7 @@ export default class MessageSender {
     return Bytes.concatenate([data, padding]);
   }
 
+  // 加密附件并发送
   async makeAttachmentPointer(
     attachment: Readonly<AttachmentType>
   ): Promise<Proto.IAttachmentPointer> {

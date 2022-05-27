@@ -340,26 +340,16 @@ async function _promiseAjax(
       fetchOptions.headers['Unidentified-Access-Key'] = accessKey;
     }
   } else if (options.user && options.password) {
-    if (
-      options.path === 'v2/keys?identity=aci' ||
-      options.path === 'v2/keys?identity=pni' ||
-      options.path === 'v2/keys/0ec77454-3b6a-4eb5-8a59-6f1871130aee/*'
-    ) {
-      const auth = Bytes.toBase64(
-        Bytes.fromString(`${options.user}.1:${options.password}`)
-      );
-      fetchOptions.headers.Authorization = `Basic ${auth}`;
-    } else if (
-      // 'v1/messages/a8e287f9-e13a-4c71-beda-15785d3b2720' 发送消息接口
-      options.path === 'v1/certificate/delivery' ||
-      options.path === 'v1/messages/0ec77454-3b6a-4eb5-8a59-6f1871130aee'
-    ) {
+    if (options.path === 'v1/accounts/code/888888') {
+      log.info('特殊情况');
+      fetchOptions.headers.Authorization = `Basic ${options.user}:${options.password}`;
+    } else {
+      // 没有Base64编码的是用来哪种接口呢？？？
+      // fetchOptions.headers.Authorization = `Basic ${options.user}:${options.password}`;
       const auth = Bytes.toBase64(
         Bytes.fromString(`${options.user}:${options.password}`)
       );
       fetchOptions.headers.Authorization = `Basic ${auth}`;
-    } else {
-      fetchOptions.headers.Authorization = `Basic ${options.user}:${options.password}`;
     }
   }
 
@@ -2304,6 +2294,7 @@ export function initialize({
     };
 
     async function putAttachment(encryptedBin: Uint8Array) {
+      log.info('这个是附件接口吗');
       const response = (await _ajax({
         call: 'attachmentId',
         httpType: 'GET',
@@ -2313,7 +2304,7 @@ export function initialize({
       const { attachmentIdString } = response;
 
       const params = makePutParams(response, encryptedBin);
-
+      log.info(`附件Params:${params};cdnUrlObj:${cdnUrlObject['0']}`);
       // This is going to the CDN, not the service, so we use _outerAjax
       await _outerAjax(`${cdnUrlObject['0']}/attachments/`, {
         ...params,

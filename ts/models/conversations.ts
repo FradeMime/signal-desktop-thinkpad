@@ -3693,6 +3693,7 @@ export class ConversationModel extends window.Backbone
     window.reduxActions.stickers.useSticker(packId, stickerId);
   }
 
+  // 对每个人删除消息
   async sendDeleteForEveryoneMessage(options: {
     id: string;
     timestamp: number;

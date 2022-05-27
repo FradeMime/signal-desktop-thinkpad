@@ -271,7 +271,6 @@ export class SocketManager extends EventListener {
       log.info('获取认证成功');
       log.info(`headers:${JSON.stringify(headers)}`);
       resource = await this.getAuthenticatedResource();
-      log.info('获取WebSocketResource句柄');
     } else {
       resource = await this.getUnauthenticatedResource();
       await this.startUnauthenticatedExpirationTimer(resource);

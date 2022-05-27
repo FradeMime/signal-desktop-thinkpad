@@ -471,6 +471,7 @@ message SyncMessage {
   repeated Viewed                 viewed                 = 16;
 }
 
+// 附件
 message AttachmentPointer {
   enum Flags {
     VOICE_MESSAGE = 1;
@@ -480,6 +481,7 @@ message AttachmentPointer {
     GIF           = 8;
   }
 
+  // 1.30无
   oneof attachment_identifier {
     fixed64        cdnId           = 1;
     string         cdnKey          = 15;
@@ -494,6 +496,7 @@ message AttachmentPointer {
   optional uint32  width           = 9;
   optional uint32  height          = 10;
   optional string  caption         = 11;
+  // 1.30后面参数无
   optional string  blurHash        = 12;
   optional uint64  uploadTimestamp = 13;
   optional uint32  cdnNumber       = 14;
