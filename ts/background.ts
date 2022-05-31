@@ -212,6 +212,7 @@ export async function startApp(): Promise<void> {
       server,
     });
 
+    // 初始化消息接收函数
     log.info('Initializing MessageReceiver');
     messageReceiver = new MessageReceiver({
       server,

@@ -16,6 +16,7 @@ import { UUID } from '../types/UUID';
 import type { ServerKeysType, WebAPIType } from './WebAPI';
 import * as log from '../logging/log';
 
+// OutgoingMsg 和 GroupMsg会调用
 export async function getKeysForIdentifier(
   identifier: string,
   server: WebAPIType,
@@ -49,6 +50,7 @@ export async function getKeysForIdentifier(
   }
 }
 
+// 获取联系人密钥信息
 async function getServerKeys(
   identifier: string,
   server: WebAPIType,

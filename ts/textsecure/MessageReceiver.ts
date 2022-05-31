@@ -282,7 +282,7 @@ export default class MessageReceiver
         });
       }
       log.info('handleRequest消息处理完成');
-      // return;
+      return;
     }
 
     const job = async () => {

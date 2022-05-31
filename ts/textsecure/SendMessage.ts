@@ -122,6 +122,7 @@ export type ReactionType = {
   targetTimestamp?: number;
 };
 
+// 这个可能得改
 export type AttachmentType = {
   size: number;
   data: Uint8Array;
@@ -474,6 +475,7 @@ export default class MessageSender {
     this.pendingMessages = {};
   }
 
+  // 任务队列
   async queueJobForIdentifier<T>(
     identifier: string,
     runJob: () => Promise<T>
@@ -875,6 +877,7 @@ export default class MessageSender {
     );
   }
 
+  // 将msg转proto，用来sendMessage
   sendMessageProto({
     callback,
     contentHint,
@@ -1051,6 +1054,7 @@ export default class MessageSender {
 
   // Support for sync messages
 
+  // 在发送消息给别人后，异步发送给你其他的设备
   // Note: this is used for sending real messages to your other devices after sending a
   //   message to others.
   async sendSyncMessage({

@@ -536,7 +536,7 @@ function makeHTTPError(
 //   ：服务端这个接口没有功能
 const URL_CALLS = {
   accounts: 'v1/accounts', // 1.30.0
-  accountExistence: 'v1/accounts/account',
+  accountExistence: 'v1/accounts/account', // android
   attachmentId: 'v2/attachments/form/upload', // 1.30.0
   attestation: 'v1/attestation',
   challenge: 'v1/challenge',

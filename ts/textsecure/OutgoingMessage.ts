@@ -252,6 +252,7 @@ export default class OutgoingMessage {
     };
   }
 
+  // 获取用户密钥信息
   async getKeysForIdentifier(
     identifier: string,
     updateDevices?: Array<number>
@@ -281,6 +282,7 @@ export default class OutgoingMessage {
     }
   }
 
+  // 递送消息，调用ServerAPI
   async transmitMessage(
     identifier: string,
     jsonData: ReadonlyArray<MessageType>,
@@ -288,7 +290,6 @@ export default class OutgoingMessage {
     { accessKey }: { accessKey?: string } = {}
   ): Promise<void> {
     let promise;
-    log.info('发送消息给用户taransmitMessage');
     if (accessKey) {
       log.info('transmitMessage sendMessagesUnauth');
       promise = this.server.sendMessagesUnauth(
@@ -348,6 +349,7 @@ export default class OutgoingMessage {
     return undefined;
   }
 
+  // 对数据进行加密, 调用signal-app
   async getCiphertextMessage({
     identityKeyStore,
     protocolAddress,
@@ -662,6 +664,7 @@ export default class OutgoingMessage {
     );
   }
 
+  // sendToIdentifier->reloadDevicesAndSend->doSendMessage
   async sendToIdentifier(providedIdentifier: string): Promise<void> {
     let identifier = providedIdentifier;
     try {
